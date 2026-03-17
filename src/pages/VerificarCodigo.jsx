@@ -53,11 +53,7 @@ function VerificarCodigo() {
       if (token) {
         guardarTokenPublico(token);
         localStorage.removeItem("otp_email");
-        setMensaje("Código verificado correctamente.");
-
-        setTimeout(() => {
-          navigate("/portal");
-        }, 1000);
+        navigate("/portal");
       } else {
         setMensaje("Código verificado, pero no se encontró token en la respuesta.");
       }
@@ -110,7 +106,7 @@ function VerificarCodigo() {
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Verificando..." : "Verificar código"}
+            {loading ? "Verificando..." : "Iniciar sesión"}
           </button>
         </form>
 

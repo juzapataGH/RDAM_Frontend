@@ -5,6 +5,8 @@ import api from "../api/api";
 function AdminSolicitudes() {
   const navigate = useNavigate();
   const tokenInterno = localStorage.getItem("tokenInterno");
+  const userInterno = JSON.parse(localStorage.getItem("userInterno") || "{}");
+  const esAdmin = userInterno?.rol === "ADMIN";
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [estado, setEstado] = useState("");
@@ -16,6 +18,7 @@ function AdminSolicitudes() {
 
   const handleLogout = () => {
     localStorage.removeItem("tokenInterno");
+    localStorage.removeItem("userInterno");
     navigate("/solicitar-certificado");
   };
 
@@ -116,13 +119,15 @@ function AdminSolicitudes() {
   return (
     <div className="page page-auth">
       <div className="page-header">
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={() => navigate("/portal-interno")}
-        >
-          ← Volver
-        </button>
+        {esAdmin && (
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => navigate("/portal-interno")}
+          >
+            ← Volver
+          </button>
+        )}
 
         <button
           type="button"
@@ -231,7 +236,9 @@ function AdminSolicitudes() {
                 {solicitudes.map((s) => (
                   <tr key={s.id}>
                     <td>{s.nro_tramite}</td>
-                    <td>{s.nombre} {s.apellido}</td>
+                    <td>
+                      {s.nombre} {s.apellido}
+                    </td>
                     <td>{s.cuil}</td>
                     <td>
                       <span className={`estado estado-${s.estado?.toLowerCase()}`}>

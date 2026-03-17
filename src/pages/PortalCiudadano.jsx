@@ -1,15 +1,35 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function PortalCiudadano() {
-  const { tokenPublico } = useAuth();
+  const { tokenPublico, limpiarTokenPublico } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (!tokenPublico) {
     return <Navigate to="/solicitar-certificado" replace />;
   }
 
+  const flashMessage = location.state?.flashMessage || "";
+
+  const handleLogout = () => {
+    limpiarTokenPublico();
+    localStorage.removeItem("otp_email");
+    navigate("/solicitar-certificado");
+  };
+
   return (
     <div className="page page-auth">
+      <div className="page-header">
+        <button
+          type="button"
+          className="btn-secondary btn-danger-soft"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
+        </button>
+      </div>
+
       <div className="auth-card">
         <div className="auth-header">
           <p className="eyebrow">Ministerio de Justicia</p>
@@ -19,7 +39,9 @@ function PortalCiudadano() {
           </p>
         </div>
 
-        <div className="portal-actions">
+        {flashMessage && <p className="message success">{flashMessage}</p>}
+
+        <div className="menu-grid">
           <Link to="/crear-solicitud" className="portal-link">
             <button className="btn-primary">Crear solicitud</button>
           </Link>
@@ -27,17 +49,6 @@ function PortalCiudadano() {
           <Link to="/mis-certificados" className="portal-link">
             <button className="btn-primary">Ver mis solicitudes</button>
           </Link>
-
-          <Link to="/verificar-certificado" className="portal-link">
-            <button className="btn-primary">Verificar certificado</button>
-          </Link>
-        </div>
-
-        <div className="auth-footer">
-          <p>
-            Desde este panel podés iniciar nuevos trámites, consultar tus
-            solicitudes y verificar certificados emitidos.
-          </p>
         </div>
       </div>
     </div>

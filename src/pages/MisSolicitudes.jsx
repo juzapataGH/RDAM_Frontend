@@ -57,13 +57,13 @@ function MisSolicitudes() {
       if (status === "success") {
         setMensaje(
           solicitudId
-            ? `El pago de la solicitud ${solicitudId} fue procesado. Actualizando estado...`
-            : "El pago fue procesado. Actualizando estado..."
+            ? `El pago de la solicitud fue procesado.`
+            : "El pago fue procesado con exito"
         );
       } else if (status === "error") {
         setMensaje(
           solicitudId
-            ? `El pago de la solicitud ${solicitudId} fue rechazado.`
+            ? `El pago de la solicitud fue rechazado.`
             : "El pago fue rechazado."
         );
       }

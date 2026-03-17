@@ -14,7 +14,6 @@ function CrearSolicitud() {
     distritoId: 1,
   });
 
-  const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -33,33 +32,20 @@ function CrearSolicitud() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensaje("");
     setError("");
     setLoading(true);
 
     try {
-      const response = await api.post("/public/solicitudes", formData, {
+      await api.post("/public/solicitudes", formData, {
         headers: {
           Authorization: `Bearer ${tokenPublico}`,
         },
       });
 
-      const nroTramite =
-        response.data?.solicitud?.nro_tramite ||
-        response.data?.nro_tramite ||
-        response.data?.nroTramite;
-
-      setMensaje(
-        nroTramite
-          ? `Solicitud creada correctamente. Nro. de trámite: ${nroTramite}`
-          : "Solicitud creada correctamente."
-      );
-
-      setFormData({
-        cuil: "",
-        nombre: "",
-        apellido: "",
-        distritoId: 1,
+      navigate("/portal", {
+        state: {
+          flashMessage: "Solicitud creada con éxito",
+        },
       });
     } catch (err) {
       console.error(err);
@@ -81,10 +67,7 @@ function CrearSolicitud() {
 
   return (
     <div className="page page-auth">
-
-      {/* BOTONES EN ESQUINAS */}
       <div className="page-header">
-
         <button
           type="button"
           className="btn-secondary"
@@ -100,7 +83,6 @@ function CrearSolicitud() {
         >
           Cerrar sesión
         </button>
-
       </div>
 
       <div className="auth-card auth-card-wide">
@@ -175,7 +157,6 @@ function CrearSolicitud() {
           </button>
         </form>
 
-        {mensaje && <p className="message success">{mensaje}</p>}
         {error && <p className="message error">{error}</p>}
 
         <div className="auth-footer">

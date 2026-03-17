@@ -1,0 +1,7 @@
+services:
+  rdam-frontend:
+    build: .
+    container_name: rdam-frontend
+    ports:
+      - "5173:80"
+    restart: always

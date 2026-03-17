@@ -36,35 +36,45 @@ function SolicitarCodigo() {
     }
   };
 
-  const handleInternalLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+ const handleInternalLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      const response = await api.post("/internal/auth/login", {
-        email,
-        password,
-      });
+  try {
+    const response = await api.post("/internal/auth/login", {
+      email,
+      password,
+    });
 
-      const token = response.data?.token;
+    const token = response.data?.token;
+    const user = response.data?.user;
 
-      if (!token) {
-        setError("No se recibió token del backend");
-        return;
-      }
-
-      localStorage.setItem("tokenInterno", token);
-      navigate("/portal-interno");
-    } catch (err) {
-      console.error(err);
-      setError(
-        err.response?.data?.message || "Credenciales inválidas"
-      );
-    } finally {
-      setLoading(false);
+    if (!token) {
+      setError("No se recibió token del backend");
+      return;
     }
-  };
+
+    localStorage.setItem("tokenInterno", token);
+
+    if (user) {
+      localStorage.setItem("userInterno", JSON.stringify(user));
+    }
+
+    if (user?.rol === "OPERADOR") {
+      navigate("/admin/solicitudes");
+    } else {
+      navigate("/portal-interno");
+    }
+  } catch (err) {
+    console.error(err);
+    setError(
+      err.response?.data?.message || "Credenciales inválidas"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="page page-auth">
